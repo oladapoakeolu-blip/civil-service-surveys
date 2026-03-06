@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Civil Service Research Surveys — Sub-Saharan Africa</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0F2440; --blue:#1B4F8A; --teal:#0D7C6E; --purp:#4A1E7A;
+    --gold:#B8860B; --green:#1A6B2A; --off:#F6F8FC; --text:#1A2535;
+    --mid:#5A6880; --border:#D8E2EE;
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;background:var(--off);color:var(--text);min-height:100vh}
+
+  /* HERO */
+  .hero{background:var(--navy);position:relative;overflow:hidden;padding:72px 32px 80px;text-align:center}
+  .hero::before{content:'';position:absolute;inset:0;
+    background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
+    background-size:48px 48px;pointer-events:none}
+  .hero::after{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);
+    width:600px;height:400px;background:radial-gradient(ellipse,rgba(27,79,138,0.4) 0%,transparent 70%);pointer-events:none}
+  .hero-inner{position:relative;z-index:1;max-width:780px;margin:0 auto}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);border-radius:100px;padding:6px 18px;
+    font-size:12px;font-weight:600;color:rgba(255,255,255,0.7);letter-spacing:1px;text-transform:uppercase;margin-bottom:28px}
+  .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:#4ECDC4;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+
+  .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,56px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:20px}
+  .hero h1 em{font-style:italic;color:#7EC8C2}
+  .hero-sub{font-size:16px;color:rgba(255,255,255,0.6);line-height:1.7;max-width:600px;margin:0 auto 36px}
+
+  /* HERO STATS */
+  .hero-stats{display:flex;justify-content:center;border:1px solid rgba(255,255,255,0.12);
+    border-radius:14px;overflow:hidden;max-width:560px;margin:0 auto 28px;background:rgba(255,255,255,0.04)}
+  .stat{flex:1;padding:16px 20px;border-right:1px solid rgba(255,255,255,0.1);text-align:center}
+  .stat:last-child{border-right:none}
+  .stat-n{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:#7EC8C2;line-height:1;transition:color 0.4s}
+  .stat-n.complete{color:#4ECDC4}
+  .stat-l{font-size:11px;color:rgba(255,255,255,0.45);margin-top:4px}
+
+  /* HERO PROGRESS */
+  .hero-prog{max-width:560px;margin:0 auto}
+  .hero-prog-labels{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:8px}
+  .hero-prog-labels b{color:#7EC8C2}
+  .hero-track{height:10px;background:rgba(255,255,255,0.1);border-radius:100px;overflow:hidden}
+  .hero-fill{height:100%;background:linear-gradient(90deg,#4ECDC4,#7EC8C2);border-radius:100px;width:0%;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+
+  /* STRIP */
+  .strip{background:#fff;border-bottom:1px solid var(--border);padding:18px 32px;
+    display:flex;align-items:center;justify-content:center;gap:10px;font-size:14px;color:var(--mid)}
+  .strip strong{color:var(--text)}
+  .dot{width:5px;height:5px;border-radius:50%;background:var(--border)}
+
+  /* MAIN */
+  .main{max-width:900px;margin:0 auto;padding:56px 24px 80px}
+  .sec-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+    color:var(--mid);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+  .sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+  /* CARDS */
+  .cards{display:flex;flex-direction:column;gap:24px}
+  .card{background:#fff;border-radius:20px;border:1px solid var(--border);
+    box-shadow:0 2px 20px rgba(15,36,64,.06);overflow:hidden;display:grid;
+    grid-template-columns:6px 1fr;transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(15,36,64,.12)}
+  .card:nth-child(1){--a:#1B4F8A;--alt:#EBF3FB}
+  .card:nth-child(2){--a:#0D7C6E;--alt:#E3F5F3}
+  .card:nth-child(3){--a:#4A1E7A;--alt:#EDE5F8}
+  .stripe{background:var(--a)}
+  .body{padding:28px 32px}
+  .top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:16px}
+  .badge{background:var(--alt);color:var(--a);font-size:11px;font-weight:700;
+    letter-spacing:1px;text-transform:uppercase;padding:4px 12px;border-radius:100px;border:1px solid var(--a)}
+  .meta{display:flex;gap:16px;flex-wrap:wrap}
+  .mi{font-size:12px;color:var(--mid);display:flex;align-items:center;gap:5px}
+  .mi::before{content:attr(data-icon);font-size:13px}
+  .ctitle{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:8px}
+  .desc{font-size:14px;color:var(--mid);line-height:1.7;margin-bottom:20px}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:22px}
+  .tag{background:var(--alt);color:var(--a);font-size:11px;font-weight:500;padding:4px 11px;border-radius:100px}
+
+  /* COUNTRY PROGRESS */
+  .cp{border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:22px;background:var(--off)}
+  .cp-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+    color:var(--mid);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .cp-head::after{content:'';flex:1;height:1px;background:var(--border)}
+  .cp-row{margin-bottom:12px}
+  .cp-row:last-child{margin-bottom:0}
+  .cp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .cp-name{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
+  .cp-right{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mid)}
+  .cp-rem{font-size:14px;font-weight:700;color:var(--a);min-width:20px;text-align:right}
+  .cp-full{display:none;background:#E8F8EE;color:var(--green);border:1px solid #A8DDB8;
+    border-radius:100px;padding:2px 10px;font-size:11px;font-weight:700}
+  .cp-track{height:8px;background:#E8EDF4;border-radius:100px;overflow:hidden}
+  .cp-bar{height:100%;border-radius:100px;background:var(--a);width:0%;transition:width 1.3s cubic-bezier(.4,0,.2,1)}
+  .cp-bar.done{background:var(--green)}
+
+  /* FOOTER OF CARD */
+  .foot{display:flex;align-items:center;justify-content:space-between;
+    padding-top:20px;border-top:1px solid var(--border);gap:16px;flex-wrap:wrap}
+  .flags{display:flex;gap:8px}
+  .flag{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--mid);
+    background:var(--off);padding:4px 12px;border-radius:100px;border:1px solid var(--border)}
+  .btn{display:inline-flex;align-items:center;gap:9px;background:var(--a);color:#fff;
+    text-decoration:none;padding:12px 26px;border-radius:12px;font-family:'DM Sans',sans-serif;
+    font-size:14px;font-weight:600;transition:all .18s;white-space:nowrap}
+  .btn:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.18)}
+  .btn svg{transition:transform .18s}
+  .btn:hover svg{transform:translateX(3px)}
+  .btn.closed{background:#9AA5B4;pointer-events:none;cursor:default}
+
+  /* NOTICE */
+  .notice{background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px 32px;
+    margin-top:40px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start}
+  .ni{width:44px;height:44px;background:#FFF8E6;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .notice h3{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px}
+  .notice p{font-size:13px;color:var(--mid);line-height:1.7}
+  .notice ul{margin-top:12px;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+  .notice li{font-size:13.5px;color:var(--mid);line-height:1.75;padding-left:22px;position:relative}
+  .notice li::before{content:"✦";color:var(--gold);font-size:10px;position:absolute;left:2px;top:5px}
+  .notice li strong{color:var(--text);font-weight:600}
+
+  footer{background:var(--navy);color:rgba(255,255,255,.45);text-align:center;padding:28px 32px;font-size:12px;line-height:1.8}
+  footer strong{color:rgba(255,255,255,.7)}
+
+  @media(max-width:620px){
+    .hero{padding:52px 20px 60px}
+    .hero-stats{flex-direction:column;max-width:280px}
+    .stat{border-right:none;border-bottom:1px solid rgba(255,255,255,0.1)}
+    .stat:last-child{border-bottom:none}
+    .main{padding:36px 16px 60px}
+    .body{padding:22px 20px}
+    .top{flex-direction:column;gap:10px}
+    .foot{flex-direction:column;align-items:flex-start}
+    .btn{width:100%;justify-content:center}
+    .strip{flex-direction:column;gap:6px;text-align:center}
+    .dot{display:none}
+    .notice{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Active Research Study</div>
+    <h1>Public Sector Research Surveys<br><em>Sub-Saharan Africa</em></h1>
+    <p class="hero-sub">You are invited to participate in an academic research study examining governance, wellbeing, and leadership in the Nigerian, Ghanaian, Tanzanian, and Rwandan civil service. Please select the survey relevant to your country and role below.</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-n">3</div>
+        <div class="stat-l">Research Papers</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n">4</div>
+        <div class="stat-l">Countries</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n" id="hRem">460</div>
+        <div class="stat-l">Responses Remaining</div>
+      </div>
+      <div class="stat">
+        <div class="stat-n" id="hRec">0</div>
+        <div class="stat-l">Received So Far</div>
+      </div>
+    </div>
+
+    <div class="hero-prog">
+      <div class="hero-prog-labels">
+        <span>Overall collection progress</span>
+        <b id="hPct">0% complete</b>
+      </div>
+      <div class="hero-track"><div class="hero-fill" id="hFill"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <strong>How to participate:</strong> Read each paper description below
+  <div class="dot"></div>
+  Select the survey that applies to your country
+  <div class="dot"></div>
+  Complete and submit — fully anonymous
+</div>
+
+<main class="main">
+  <div class="sec-label">Select Your Survey</div>
+  <div class="cards">
+
+    <!-- PAPER 4 -->
+    <div class="card">
+      <div class="stripe"></div>
+      <div class="body">
+        <div class="top">
+          <span class="badge">Paper 4</span>
+          <div class="meta">
+            <span class="mi" data-icon="🕐">15–20 min</span>
+            <span class="mi" data-icon="📝">55 questions</span>
+            <span class="mi" data-icon="🔒">Anonymous</span>
+          </div>
+        </div>
+        <h2 class="ctitle">Corruption, Organizational Fairness &amp; Employee Motivation</h2>
+        <p class="desc">This survey examines how perceived institutional corruption and organizational fairness affect civil servants' work motivation and commitment. It covers your observations of corruption in your ministry, the fairness of processes and treatment at work, your supervisor's ethical leadership style, and your current levels of motivation and organizational commitment.</p>
+        <div class="tags">
+          <span class="tag">Corruption Perception</span>
+          <span class="tag">Organizational Justice</span>
+          <span class="tag">Ethical Leadership</span>
+          <span class="tag">Work Motivation</span>
+          <span class="tag">Organizational Commitment</span>
+        </div>
+        <div class="cp">
+          <div class="cp-head">Live Response Progress</div>
+          <div class="cp-row">
+            <div class="cp-top">
+              <span class="cp-name">🇳🇬 Nigeria</span>
+              <div class="cp-right">
+                <span class="cp-rem" id="p4-ng-r">—</span>
+                <span>of 75 remaining</span>
+                <span class="cp-full" id="p4-ng-b">✓ Complete</span>
+              </div>
+            </div>
+            <div class="cp-track"><div class="cp-bar" id="p4-ng-f"></div></div>
+          </div>
+          <div class="cp-row">
+            <div class="cp-top">
+              <span class="cp-name">🇬🇭 Ghana</span>
+              <div class="cp-right">
+                <span class="cp-rem" id="p4-gh-r">—</span>
+                <span>of 75 remaining</span>
+                <span class="cp-full" id="p4-gh-b">✓ Complete</span>
+              </div>
+            </div>
+            <div class="cp-track"><div class="cp-bar" id="p4-gh-f"></div></div>
+          </div>
+        </div>
+        <div class="foot">
+          <div class="flags">
+            <div class="flag">🇳🇬 Nigeria</div>
+            <div class="flag">🇬🇭 Ghana</div>
+          </div>
+          <a href="https://surverypaper4.netlify.app/" target="_blank" class="btn" id="p4-btn">
+            Start Survey <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAPER 5 -->
+    <div class="card">
+      <div class="stripe"></div>
+      <div class="body">
+        <div class="top">
+          <span class="badge">Paper 5</span>
+          <div class="meta">
+            <span class="mi" data-icon="🕐">15–20 min</span>
+            <span class="mi" data-icon="📝">61 questions</span>
+            <span class="mi" data-icon="🔒">Anonymous</span>
+          </div>
+        </div>
+        <h2 class="ctitle">Occupational Stress, Burnout &amp; Employee Performance</h2>
+        <p class="desc">This survey investigates how occupational stress and burnout affect the performance of public servants. It includes questions about your stress levels over the last month, specific stressors in the African civil service context (such as payment delays and political interference), signs of burnout, the support you receive from your organization, and your self-assessed work performance.</p>
+        <div class="tags">
+          <span class="tag">Perceived Stress (PSS-10)</span>
+          <span class="tag">African Stressors (APSS)</span>
+          <span class="tag">Burnout (MBI-GS)</span>
+          <span class="tag">Organizational Support</span>
+          <span class="tag">Employee Performance</span>
+        </div>
+        <div class="cp">
+          <div class="cp-head">Live Response Progress</div>
+          <div class="cp-row">
+            <div class="cp-top">
+              <span class="cp-name">🇳🇬 Nigeria</span>
+              <div class="cp-right">
+                <span class="cp-rem" id="p5-ng-r">—</span>
+                <span>of 80 remaining</span>
+                <span class="cp-full" id="p5-ng-b">✓ Complete</span>
+              </div>
+            </div>
+            <div class="cp-track"><div class="cp-bar" id="p5-ng-f"></div></div>
+          </div>
+          <div class="cp-row">
+            <div class="cp-top">
+              <span class="cp-name">🇹🇿 Tanzania</span>
+              <div class="cp-right">
+                <span class="cp-rem" id="p5-tz-r">—</span>
+                <span>of 80 remaining</span>
+                <span class="cp-full" id="p5-tz-b">✓ Complete</span>
+              </div>
+            </div>
+            <div class="cp-track"><div class="cp-bar" id="p5-tz-f"></div></div>
+          </div>
+        </div>
+        <div class="foot">
+          <div class="flags">
+            <div class="flag">🇳🇬 Nigeria</div>
+            <div class="flag">🇹🇿 Tanzania</div>
+          </div>
+          <a href="https://surveypaper5.netlify.app/" target="_blank" class="btn" id="p5-btn">
+            Start Survey <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAPER 6 -->
+    <div class="card">
+      <div class="stripe"></div>
+      <div class="body">
+        <div class="top">
+          <span class="badge">Paper 6</span>
+          <div class="meta">
+            <span class="mi" data-icon="🕐">15–20 min</span>
+            <span class="mi" data-icon="📝">53 questions</span>
+            <span class="mi" data-icon="🔒">Anonymous</span>
+          </div>
+        </div>
+        <h2 class="ctitle">Gender Disparities in Public Sector Leadership &amp; Institutional Performance</h2>
+        <p class="desc">This survey explores how gender-inclusive leadership practices — and the barriers that limit them — affect organizational climate and institutional performance. It covers the representation of women in senior roles, your organization's gender inclusion practices, barriers you observe or experience, the overall organizational climate, your work motivation, and your ministry's performance. Some questions are sensitive and may be skipped.</p>
+        <div class="tags">
+          <span class="tag">Gender-Inclusive Leadership</span>
+          <span class="tag">Glass Ceiling Barriers</span>
+          <span class="tag">Organizational Climate</span>
+          <span class="tag">Work Motivation</span>
+          <span class="tag">Institutional Performance</span>
+        </div>
+        <div class="cp">
+          <div class="cp-head">Live Response Progress</div>
+          <div class="cp-row">
+            <div class="cp-top">
+              <span class="cp-name">🇷🇼 Rwanda</span>
+              <div class="cp-right">
+                <span class="cp-rem" id="p6-rw-r">—</span>
+                <span>of 75 remaining</span>
+                <span class="cp-full" id="p6-rw-b">✓ Complete</span>
+              </div>
+            </div>
+            <div class="cp-track"><div class="cp-bar" id="p6-rw-f"></div></div>
+          </div>
+          <div class="cp-row">
+            <div class="cp-top">
+              <span class="cp-name">🇳🇬 Nigeria</span>
+              <div class="cp-right">
+                <span class="cp-rem" id="p6-ng-r">—</span>
+                <span>of 75 remaining</span>
+                <span class="cp-full" id="p6-ng-b">✓ Complete</span>
+              </div>
+            </div>
+            <div class="cp-track"><div class="cp-bar" id="p6-ng-f"></div></div>
+          </div>
+        </div>
+        <div class="foot">
+          <div class="flags">
+            <div class="flag">🇷🇼 Rwanda</div>
+            <div class="flag">🇳🇬 Nigeria</div>
+          </div>
+          <a href="https://surveypaper6.netlify.app/" target="_blank" class="btn" id="p6-btn">
+            Start Survey <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="notice">
+    <div class="ni">🔒</div>
+    <div>
+      <h3>Participant Rights &amp; Data Protection</h3>
+      <p>Your participation in any of these surveys is entirely voluntary. Before you begin, please note:</p>
+      <ul>
+        <li>All surveys are for <strong>academic research purposes only</strong> — not government inspections, staff evaluations, or performance assessments of any kind.</li>
+        <li>Your responses are <strong>completely anonymous</strong> — no name, staff number, email address, or identifying information is collected at any point.</li>
+        <li>Data will only ever be published as <strong>group-level statistical results</strong> — no individual response will ever be identifiable in any publication.</li>
+        <li>You may <strong>stop at any time</strong> without any consequence, and you may skip any question you prefer not to answer.</li>
+        <li>Findings will be submitted to <strong>peer-reviewed academic journals</strong> and may be shared with public service reform bodies to inform evidence-based policy.</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p><strong>Academic Research Study</strong> — Sub-Saharan African Public Sector</p>
+  <p>Papers 4, 5 &amp; 6 | Nigeria · Ghana · Tanzania · Rwanda</p>
+  <p style="margin-top:8px;">For enquiries about this research, please contact the principal investigator directly.<br>All surveys comply with standard academic ethical research protocols.</p>
+</footer>
+
+<script>
+// ── QUOTA CONFIG (must match the survey files) ─────────────────────────────
+const PAPERS = [
+  { ns:'civilservice-p4-2026-v1', btn:'p4-btn', total:150, countries:[
+      { key:'nigeria',  quota:75, r:'p4-ng-r', f:'p4-ng-f', b:'p4-ng-b' },
+      { key:'ghana',    quota:75, r:'p4-gh-r', f:'p4-gh-f', b:'p4-gh-b' },
+  ]},
+  { ns:'civilservice-p5-2026-v1', btn:'p5-btn', total:160, countries:[
+      { key:'nigeria',  quota:80, r:'p5-ng-r', f:'p5-ng-f', b:'p5-ng-b' },
+      { key:'tanzania', quota:80, r:'p5-tz-r', f:'p5-tz-f', b:'p5-tz-b' },
+  ]},
+  { ns:'civilservice-p6-2026-v1', btn:'p6-btn', total:150, countries:[
+      { key:'rwanda',  quota:75, r:'p6-rw-r', f:'p6-rw-f', b:'p6-rw-b' },
+      { key:'nigeria', quota:75, r:'p6-ng-r', f:'p6-ng-f', b:'p6-ng-b' },
+  ]},
+];
+const GRAND_TOTAL = 460;
+
+// ── HELPERS ────────────────────────────────────────────────────────────────
+async function getCount(ns, key) {
+  try {
+    const r = await fetch(`https://api.countapi.xyz/get/${ns}/${key}`);
+    const d = await r.json();
+    return Math.max(0, d.value || 0);
+  } catch(e) { return 0; }
+}
+
+function animNum(el, to, dur=900) {
+  if (!el) return;
+  const from = parseInt(el.textContent) || 0;
+  const diff = to - from;
+  const t0 = performance.now();
+  const tick = now => {
+    const p = Math.min((now - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(from + diff * e);
+    if (p < 1) requestAnimationFrame(tick);
+    else el.textContent = to;
+  };
+  requestAnimationFrame(tick);
+}
+
+function setBar(id, count, quota) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const pct = Math.min((count / quota) * 100, 100);
+  setTimeout(() => {
+    el.style.width = pct + '%';
+    if (count >= quota) el.classList.add('done');
+  }, 250);
+}
+
+// ── MAIN LOAD ──────────────────────────────────────────────────────────────
+async function loadAll() {
+  let grandReceived = 0;
+
+  for (const p of PAPERS) {
+    let paperReceived = 0;
+    let allFull = true;
+
+    for (const c of p.countries) {
+      const count = await getCount(p.ns, c.key);
+      const rem   = Math.max(0, c.quota - count);
+      paperReceived += count;
+
+      // Remaining number
+      const remEl = document.getElementById(c.r);
+      if (remEl) {
+        animNum(remEl, rem);
+        if (rem === 0) remEl.style.color = 'var(--green)';
+      }
+
+      // Progress bar
+      setBar(c.f, count, c.quota);
+
+      // Complete badge
+      if (count >= c.quota) {
+        const badge = document.getElementById(c.b);
+        if (badge) badge.style.display = 'inline-block';
+      } else {
+        allFull = false;
+      }
+    }
+
+    grandReceived += paperReceived;
+
+    // Disable Start Survey button if all countries full
+    if (allFull) {
+      const btn = document.getElementById(p.btn);
+      if (btn) {
+        btn.classList.add('closed');
+        btn.innerHTML = '✓ Data Collection Complete';
+      }
+    }
+  }
+
+  // ── Hero stats ───────────────────────────────────────────────────────────
+  const grandRem = Math.max(0, GRAND_TOTAL - grandReceived);
+  const pct = Math.min(Math.round((grandReceived / GRAND_TOTAL) * 100), 100);
+
+  animNum(document.getElementById('hRem'), grandRem, 1100);
+  animNum(document.getElementById('hRec'), grandReceived, 1100);
+
+  setTimeout(() => {
+    const pctEl = document.getElementById('hPct');
+    if (pctEl) pctEl.textContent = pct + '% complete';
+    const fill = document.getElementById('hFill');
+    if (fill) fill.style.width = pct + '%';
+    if (grandRem === 0) {
+      document.getElementById('hRem').classList.add('complete');
+    }
+  }, 400);
+}
+
+// Load on page open, refresh every 90 seconds
+loadAll();
+setInterval(loadAll, 90000);
+</script>
+</body>
+</html>

@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Survey — Paper 6 | Gender in Leadership</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purp: #4A1E7A;
+    --purp-dk: #341260;
+    --purp-lt: #EDE5F8;
+    --teal: #0C6B5E;
+    --teal-lt: #E3F5F1;
+    --gold: #9A6B00;
+    --gold-lt: #FFF5DC;
+    --red: #B03030;
+    --green: #1A6B2A;
+    --white: #FFFFFF;
+    --off: #F8F7FC;
+    --gray: #F0EDF8;
+    --border: #D4C8EC;
+    --text: #1C1430;
+    --mid: #7060A0;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; background:var(--off); color:var(--text); min-height:100vh; }
+
+  .topbar { background:var(--purp-dk); padding:12px 32px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; box-shadow:0 2px 14px rgba(52,18,96,0.3); }
+  .topbar-title { font-family:'Playfair Display',serif; font-size:14px; color:#fff; }
+  .topbar-badge { background:var(--purp); border-radius:20px; padding:4px 14px; font-size:12px; font-weight:600; color:#fff; }
+
+  .prog-wrap { background:var(--purp-dk); padding:0 32px 16px; border-bottom:3px solid var(--purp); }
+  .prog-bars { display:flex; gap:5px; margin-bottom:8px; }
+  .prog-bar { flex:1; height:6px; border-radius:4px; background:rgba(255,255,255,0.18); transition:background 0.4s; }
+  .prog-bar.done { background:var(--purp); }
+  .prog-bar.active { background:#A88EDB; }
+  .prog-label { display:flex; justify-content:space-between; font-size:12px; color:rgba(255,255,255,0.6); }
+  .prog-label span { color:rgba(255,255,255,0.9); font-weight:600; }
+
+  .outer { max-width:820px; margin:0 auto; padding:36px 20px 80px; }
+
+  .card { background:#fff; border-radius:16px; box-shadow:0 2px 28px rgba(74,30,122,0.09); border:1px solid var(--border); margin-bottom:28px; overflow:hidden; display:none; }
+  .card.visible { display:block; animation:up 0.35s ease; }
+  @keyframes up { from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)} }
+
+  .card-head { padding:22px 28px 16px; border-bottom:1px solid var(--border); display:flex; gap:16px; align-items:flex-start; }
+  .sec-badge { background:var(--purp); color:#fff; font-family:'Playfair Display',serif; font-size:18px; width:46px; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .card-head h2 { font-family:'Playfair Display',serif; font-size:21px; color:var(--purp-dk); }
+  .card-head p { font-size:13px; color:var(--mid); margin-top:4px; line-height:1.5; }
+
+  .consent-box { background:var(--purp-lt); border-left:4px solid var(--purp); border-radius:0 10px 10px 0; padding:18px 22px; margin:22px 28px; }
+  .consent-box h3 { color:var(--purp-dk); font-size:14px; margin-bottom:8px; }
+  .consent-box li { font-size:14px; margin-bottom:10px; line-height:1.75; list-style:none; padding-left:22px; position:relative; }
+  .consent-box li::before { content:"✦"; color:var(--purp); font-size:11px; position:absolute; left:2px; top:4px; }
+  .consent-box li strong { color:var(--purp-dk); font-weight:600; }
+
+  .sensitivity-note { background:var(--gold-lt); border:1px solid #E8C06A; border-radius:10px; padding:14px 20px; margin:0 28px 20px; font-size:13px; color:var(--gold); display:flex; gap:10px; align-items:flex-start; }
+  .sensitivity-note::before { content:"⚠"; font-size:16px; flex-shrink:0; }
+
+  .scale-legend { display:flex; border:1px solid var(--border); border-radius:10px; overflow:hidden; margin:0 28px 22px; font-size:12px; }
+  .leg { flex:1; text-align:center; padding:9px 3px; border-right:1px solid var(--border); background:var(--gray); }
+  .leg:last-child { border-right:none; }
+  .leg-n { font-weight:700; font-size:17px; color:var(--purp-dk); display:block; }
+  .leg-l { font-size:10px; color:var(--mid); line-height:1.3; }
+
+  .q-list { padding-bottom:8px; }
+  .q-row { display:grid; grid-template-columns:1fr auto; align-items:center; padding:16px 28px; border-bottom:1px solid var(--gray); gap:20px; transition:background 0.15s; }
+  .q-row:last-child { border-bottom:none; }
+  .q-row:nth-child(odd) { background:var(--off); }
+  .q-row:hover { background:var(--purp-lt); }
+  .q-row.unanswered { background:#FFF5F5 !important; border-left:3px solid var(--red); }
+  .q-num-txt { display:flex; gap:12px; align-items:flex-start; }
+  .q-num { font-weight:700; color:var(--mid); font-size:12px; min-width:26px; margin-top:2px; flex-shrink:0; }
+  .q-txt { font-size:14px; line-height:1.6; }
+
+  .radio-scale { display:flex; gap:5px; flex-shrink:0; }
+  .radio-scale label { display:flex; flex-direction:column; align-items:center; gap:4px; cursor:pointer; }
+  .radio-scale label input { display:none; }
+  .rb { width:36px; height:36px; border-radius:50%; border:2px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:var(--mid); transition:all 0.18s; }
+  .radio-scale label input:checked + .rb { background:var(--purp); border-color:var(--purp); color:#fff; box-shadow:0 2px 8px rgba(74,30,122,0.3); transform:scale(1.1); }
+  .radio-scale label:hover .rb { border-color:var(--purp); color:var(--purp); }
+
+  .sub-bar { background:var(--purp); color:#fff; padding:10px 28px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+  .sub-bar.teal { background:var(--teal); }
+
+  .demo-grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; padding:22px 28px; }
+  .demo-item label { display:block; font-size:13px; font-weight:600; color:var(--purp-dk); margin-bottom:5px; }
+  .demo-item select { width:100%; padding:10px 13px; border:2px solid var(--border); border-radius:10px; font-family:'Inter',sans-serif; font-size:14px; appearance:none; cursor:pointer; transition:border 0.15s; }
+  .demo-item select:focus { outline:none; border-color:var(--purp); box-shadow:0 0 0 3px rgba(74,30,122,0.12); }
+  .demo-item.full { grid-column:1/-1; }
+
+  /* Rep % input */
+  .rep-input-wrap { padding:20px 28px; }
+  .rep-input-wrap label { display:block; font-size:14px; font-weight:600; color:var(--purp-dk); margin-bottom:6px; }
+  .rep-input-wrap p { font-size:12px; color:var(--mid); margin-bottom:10px; }
+  .rep-opts { display:flex; flex-wrap:wrap; gap:10px; }
+  .rep-opts label { display:flex; align-items:center; gap:7px; font-size:14px; cursor:pointer; padding:8px 14px; border:2px solid var(--border); border-radius:10px; transition:all 0.18s; }
+  .rep-opts label input { display:none; }
+  .rep-opts label.sel { background:var(--purp-lt); border-color:var(--purp); color:var(--purp-dk); font-weight:600; }
+  .rep-opts label:hover { border-color:var(--purp); }
+
+  .open-q { padding:18px 28px; }
+  .open-q label { font-size:14px; font-weight:600; color:var(--purp-dk); display:block; margin-bottom:6px; }
+  .open-q p { font-size:12px; color:var(--mid); margin-bottom:8px; }
+  .open-q textarea { width:100%; padding:12px 14px; border:2px solid var(--border); border-radius:10px; font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; resize:vertical; min-height:90px; transition:border 0.15s; }
+  .open-q textarea:focus { outline:none; border-color:var(--purp); box-shadow:0 0 0 3px rgba(74,30,122,0.12); }
+
+  .nav-row { display:flex; justify-content:space-between; padding:20px 28px; background:var(--gray); border-top:1px solid var(--border); gap:16px; }
+  .btn { padding:12px 26px; border-radius:10px; font-family:'Inter',sans-serif; font-size:14px; font-weight:600; border:none; cursor:pointer; display:flex; align-items:center; gap:7px; transition:all 0.18s; }
+  .btn-pri { background:var(--purp-dk); color:#fff; }
+  .btn-pri:hover { background:var(--purp); transform:translateY(-1px); box-shadow:0 4px 12px rgba(74,30,122,0.3); }
+  .btn-sec { background:#fff; color:var(--purp-dk); border:2px solid var(--border); }
+  .btn-sec:hover { border-color:var(--purp); color:var(--purp); }
+  .btn-sub { background:var(--green); color:#fff; font-size:15px; padding:14px 32px; }
+  .btn-sub:hover { background:#145220; transform:translateY(-1px); }
+
+  .val-banner { background:#FFF0EE; border:1px solid #F0BABA; border-radius:8px; color:var(--red); padding:10px 18px; margin:0 28px 14px; font-size:13px; font-weight:500; display:none; }
+  .val-banner.show { display:block; }
+
+  .thankyou { display:none; text-align:center; padding:50px 28px; }
+  .thankyou.visible { display:block; animation:up 0.5s ease; }
+  .ty-icon { font-size:60px; margin-bottom:20px; }
+  .thankyou h2 { font-family:'Playfair Display',serif; font-size:30px; color:var(--purp-dk); margin-bottom:10px; }
+  .thankyou p { font-size:15px; color:var(--mid); line-height:1.6; margin-bottom:6px; }
+  .sum-box { background:var(--purp-lt); border-radius:12px; padding:22px; margin:28px 0; text-align:left; }
+  .sum-box h4 { font-size:13px; color:var(--purp-dk); font-weight:700; margin-bottom:12px; }
+  .sum-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .sum-item span:first-child { font-size:11px; color:var(--mid); display:block; }
+  .sum-item span:last-child { font-weight:700; color:var(--purp-dk); font-size:13px; }
+
+  @media(max-width:600px){
+    .outer{padding:16px 12px 60px}
+    .card-head,.nav-row,.demo-grid,.open-q{padding:14px 16px}
+    .q-row{padding:12px 16px;grid-template-columns:1fr;align-items:flex-start}
+    .radio-scale{margin-top:10px}
+    .rb{width:30px;height:30px;font-size:12px}
+    .demo-grid{grid-template-columns:1fr}
+    .sum-grid{grid-template-columns:1fr}
+    .topbar-badge{display:none}
+    .rep-opts{flex-direction:column}
+  }
+
+  /* ── SUBMISSION POPUP ── */
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: fadeIn 0.25s ease;
+  }
+  .popup-overlay.show { display: flex; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  .popup-box {
+    background: #fff;
+    border-radius: 24px;
+    padding: 44px 40px;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    animation: popUp 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
+    position: relative;
+  }
+  @keyframes popUp { from{transform:scale(0.7);opacity:0} to{transform:scale(1);opacity:1} }
+
+  .popup-tick {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 22px;
+    animation: scaleIn 0.5s 0.2s cubic-bezier(0.175,0.885,0.32,1.275) both;
+  }
+  @keyframes scaleIn { from{transform:scale(0)} to{transform:scale(1)} }
+
+  .popup-title {
+    font-family: serif;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .popup-msg {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .popup-btn {
+    display: inline-block;
+    padding: 13px 36px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity 0.18s, transform 0.18s;
+  }
+  .popup-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+  .popup-confetti {
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    letter-spacing: 6px;
+    animation: float 1.5s ease infinite alternate;
+  }
+  @keyframes float { from{transform:translateX(-50%) translateY(0)} to{transform:translateX(-50%) translateY(-6px)} }
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">📋 Research Survey — Gender Disparities in Leadership</div>
+  <div class="topbar-badge">Paper 6 | Rwanda &amp; Nigeria</div>
+</div>
+<div class="prog-wrap">
+  <div class="prog-bars" id="progBars"></div>
+  <div class="prog-label"><span id="stepLbl">Section 1 of 8</span><span id="pctLbl">0% complete</span></div>
+</div>
+
+<div class="outer">
+  <!-- SURVEY CLOSED BANNER -->
+  <div id="survey-closed" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;padding:40px 24px;text-align:center;">
+    <div style="background:#fff;border-radius:20px;padding:48px 40px;max-width:520px;box-shadow:0 4px 32px rgba(0,0,0,0.1);border:1px solid #E0E0E0;">
+      <div style="font-size:56px;margin-bottom:20px;">🎯</div>
+      <h2 style="font-family:serif;font-size:28px;color:#4A1E7A;margin-bottom:12px;">Data Collection Complete</h2>
+      <p style="font-size:15px;color:#555;line-height:1.7;margin-bottom:16px;">
+        Thank you for your interest in the <strong>Gender Disparities in Leadership</strong> survey. The required number of responses from all participating countries has now been reached.
+      </p>
+      <p style="font-size:14px;color:#888;line-height:1.6;">
+        Data collection for this study is now closed. We sincerely appreciate the participation of all respondents who contributed to this research.
+      </p>
+      <div style="margin-top:24px;padding:14px 20px;background:#F5F5F5;border-radius:10px;font-size:13px;color:#666;">
+        Findings from this study will be published in peer-reviewed academic journals and shared with relevant public service reform bodies.
+      </div>
+    </div>
+  </div>
+
+
+  <!-- CONSENT -->
+  <div class="card visible" id="s0">
+    <div class="card-head"><div class="sec-badge">★</div><div><h2>Welcome &amp; Research Consent</h2><p>Please read before you begin. Participation is voluntary and fully anonymous.</p></div></div>
+    <div class="consent-box">
+      <h3>Before you begin:</h3>
+      <ul>
+        <li>This survey is conducted for <strong>academic research purposes only</strong> — it is not a staff evaluation, government inspection, or performance assessment of any kind.</li>
+        <li>Your responses are <strong>completely anonymous</strong> — no name, staff number, or any identifying information is collected at any point.</li>
+        <li>Some questions address gender inequality and may be sensitive — you may <strong>skip any question</strong> you prefer not to answer, at any time, without any consequence.</li>
+        <li>Participation is <strong>entirely voluntary</strong> — you may stop at any point without consequence.</li>
+        <li>Results will only ever be published as <strong>group-level statistics</strong> — no individual response will ever be identified or attributed.</li>
+        <li>Estimated completion time: <strong>15–20 minutes.</strong></li>
+      </ul>
+    </div>
+    <div style="padding:0 28px 20px;"><div style="background:#E8F8EE;border:1px solid #A8DDB8;border-radius:10px;padding:14px 18px;font-size:14px;color:#1A6B2A;"><strong>By clicking "Begin Survey"</strong> you confirm you have read and understood the above and consent to participate.</div></div>
+    <div class="nav-row" style="justify-content:flex-end"><button class="btn btn-pri" onclick="goTo(1)">Begin Survey →</button></div>
+  </div>
+
+  <!-- DEMOGRAPHICS -->
+  <div class="card" id="s1">
+    <div class="card-head"><div class="sec-badge">A</div><div><h2>Background Information</h2><p>9 questions about your work context. No personally identifying information is collected.</p></div></div>
+    <div class="demo-grid">
+      <div class="demo-item"><label>D1. Country of employment *</label><select id="d1"><option value="">Select…</option><option>Rwanda</option><option>Nigeria</option></select></div>
+      <div class="demo-item"><label>D2. Gender identity *</label><select id="d2"><option value="">Select…</option><option>Male</option><option>Female</option><option>Non-binary / Other</option><option>Prefer not to say</option></select></div>
+      <div class="demo-item"><label>D3. Age group *</label><select id="d3"><option value="">Select…</option><option>Under 25</option><option>25–34</option><option>35–44</option><option>45–54</option><option>55 and above</option></select></div>
+      <div class="demo-item"><label>D4. Highest qualification *</label><select id="d4"><option value="">Select…</option><option>SSCE / O-Level</option><option>OND / NCE</option><option>BSc / HND</option><option>Masters degree</option><option>PhD or above</option></select></div>
+      <div class="demo-item"><label>D5. Civil service grade level *</label><select id="d5"><option value="">Select…</option><option>GL 01–06</option><option>GL 07–10</option><option>GL 12–14</option><option>GL 15–17</option></select></div>
+      <div class="demo-item"><label>D6. Years in current ministry *</label><select id="d6"><option value="">Select…</option><option>Less than 1 year</option><option>1–5 years</option><option>6–10 years</option><option>11–20 years</option><option>More than 20 years</option></select></div>
+      <div class="demo-item"><label>D7. Do you supervise staff? *</label><select id="d7"><option value="">Select…</option><option>Yes</option><option>No</option></select></div>
+      <div class="demo-item"><label>D8. Ministry / Agency *</label><select id="d8"><option value="">Select…</option><option>Ministry of Gender / Women Affairs</option><option>Ministry of Finance</option><option>Civil Service Commission / PSC</option><option>Public Service Reform</option><option>Other</option></select></div>
+    </div>
+    <div class="rep-input-wrap">
+      <label>D9. Approximately what percentage of Director-level and above positions in your ministry are held by women?</label>
+      <p>Your best estimate is fine. This is an optional question.</p>
+      <div class="rep-opts" id="repOpts">
+        <label><input type="radio" name="GIL_REP" value="<10%"><span>Less than 10%</span></label>
+        <label><input type="radio" name="GIL_REP" value="10-24%"><span>10–24%</span></label>
+        <label><input type="radio" name="GIL_REP" value="25-39%"><span>25–39%</span></label>
+        <label><input type="radio" name="GIL_REP" value="40-50%"><span>40–50%</span></label>
+        <label><input type="radio" name="GIL_REP" value=">50%"><span>More than 50%</span></label>
+      </div>
+    </div>
+    <div class="val-banner" id="v1">⚠ Please answer the required questions before continuing.</div>
+    <div class="nav-row"><button class="btn btn-sec" onclick="goTo(0)">← Back</button><button class="btn btn-pri" onclick="nextSec(1,'s1',['d1','d2','d3','d4','d5','d6','d7','d8'],2)">Continue →</button></div>
+  </div>
+
+  <!-- GIL -->
+  <div class="card" id="s2">
+    <div class="card-head"><div class="sec-badge">B</div><div><h2>Gender-Inclusive Leadership</h2><p>10 statements about gender inclusion in your organization's leadership.</p></div></div>
+    <div class="scale-legend">
+      <div class="leg"><span class="leg-n">1</span><span class="leg-l">Strongly<br>Disagree</span></div>
+      <div class="leg"><span class="leg-n">2</span><span class="leg-l">Disagree</span></div>
+      <div class="leg"><span class="leg-n">3</span><span class="leg-l">Neutral</span></div>
+      <div class="leg"><span class="leg-n">4</span><span class="leg-l">Agree</span></div>
+      <div class="leg"><span class="leg-n">5</span><span class="leg-l">Strongly<br>Agree</span></div>
+    </div>
+    <div class="q-list" id="s2-qs"></div>
+    <div class="val-banner" id="v2">⚠ Please answer all questions before continuing.</div>
+    <div class="nav-row"><button class="btn btn-sec" onclick="goTo(1)">← Back</button><button class="btn btn-pri" onclick="nextSec(2,'s2',null,3)">Continue →</button></div>
+  </div>
+
+  <!-- GENDER BARRIERS -->
+  <div class="card" id="s3">
+    <div class="card-head"><div class="sec-badge">C</div><div><h2>Gender Barriers in Your Organization</h2><p>12 statements about barriers women may face. Respond based on what you observe or experience — even if you have not personally experienced them. <strong>You may skip any item.</strong></p></div></div>
+    <div class="sensitivity-note">These questions address sensitive topics including gender discrimination. Please respond honestly — your anonymity is completely protected.</div>
+    <div class="scale-legend">
+      <div class="leg"><span class="leg-n">1</span><span class="leg-l">Strongly<br>Disagree</span></div>
+      <div class="leg"><span class="leg-n">2</span><span class="leg-l">Disagree</span></div>
+      <div class="leg"><span class="leg-n">3</span><span class="leg-l">Neutral</span></div>
+      <div class="leg"><span class="leg-n">4</span><span class="leg-l">Agree</span></div>
+      <div class="leg"><span class="leg-n">5</span><span class="leg-l">Strongly<br>Agree</span></div>
+    </div>
+    <div class="q-list" id="s3-qs"></div>
+    <div class="val-banner" id="v3">⚠ Please answer all questions before continuing (you may skip optional items).</div>
+    <div class="nav-row"><button class="btn btn-sec" onclick="goTo(2)">← Back</button><button class="btn btn-pri" onclick="goTo(4)">Continue →</button></div>
+  </div>
+
+  <!-- ORG CLIMATE -->
+  <div class="card" id="s4">
+    <div class="card-head"><div class="sec-badge">D</div><div><h2>Organizational Climate</h2><p>7 statements about the atmosphere and culture in your organization.</p></div></div>
+    <div class="scale-legend">
+      <div class="leg"><span class="leg-n">1</span><span class="leg-l">Strongly<br>Disagree</span></div>
+      <div class="leg"><span class="leg-n">2</span><span class="leg-l">Disagree</span></div>
+      <div class="leg"><span class="leg-n">3</span><span class="leg-l">Neutral</span></div>
+      <div class="leg"><span class="leg-n">4</span><span class="leg-l">Agree</span></div>
+      <div class="leg"><span class="leg-n">5</span><span class="leg-l">Strongly<br>Agree</span></div>
+    </div>
+    <div class="q-list" id="s4-qs"></div>
+    <div class="val-banner" id="v4">⚠ Please answer all questions before continuing.</div>
+    <div class="nav-row"><button class="btn btn-sec" onclick="goTo(3)">← Back</button><button class="btn btn-pri" onclick="nextSec(4,'s4',null,5)">Continue →</button></div>
+  </div>
+
+  <!-- MOTIVATION -->
+  <div class="card" id="s5">
+    <div class="card-head"><div class="sec-badge">E</div><div><h2>Your Work Motivation</h2><p>6 statements about how motivated you currently feel at work.</p></div></div>
+    <div class="scale-legend">
+      <div class="leg"><span class="leg-n">1</span><span class="leg-l">Strongly<br>Disagree</span></div>
+      <div class="leg"><span class="leg-n">2</span><span class="leg-l">Disagree</span></div>
+      <div class="leg"><span class="leg-n">3</span><span class="leg-l">Neutral</span></div>
+      <div class="leg"><span class="leg-n">4</span><span class="leg-l">Agree</span></div>
+      <div class="leg"><span class="leg-n">5</span><span class="leg-l">Strongly<br>Agree</span></div>
+    </div>
+    <div class="q-list" id="s5-qs"></div>
+    <div class="val-banner" id="v5">⚠ Please answer all questions before continuing.</div>
+    <div class="nav-row"><button class="btn btn-sec" onclick="goTo(4)">← Back</button><button class="btn btn-pri" onclick="nextSec(5,'s5',null,6)">Continue →</button></div>
+  </div>
+
+  <!-- PERFORMANCE -->
+  <div class="card" id="s6">
+    <div class="card-head"><div class="sec-badge">F</div><div><h2>Your Ministry's Institutional Performance</h2><p>6 statements about how well your ministry is performing, based on your observations.</p></div></div>
+    <div class="scale-legend">
+      <div class="leg"><span class="leg-n">1</span><span class="leg-l">Strongly<br>Disagree</span></div>
+      <div class="leg"><span class="leg-n">2</span><span class="leg-l">Disagree</span></div>
+      <div class="leg"><span class="leg-n">3</span><span class="leg-l">Neutral</span></div>
+      <div class="leg"><span class="leg-n">4</span><span class="leg-l">Agree</span></div>
+      <div class="leg"><span class="leg-n">5</span><span class="leg-l">Strongly<br>Agree</span></div>
+    </div>
+    <div class="q-list" id="s6-qs"></div>
+    <div class="val-banner" id="v6">⚠ Please answer all questions before continuing.</div>
+    <div class="nav-row"><button class="btn btn-sec" onclick="goTo(5)">← Back</button><button class="btn btn-pri" onclick="nextSec(6,'s6',null,7)">Continue →</button></div>
+  </div>
+
+  <!-- OPEN -->
+  <div class="card" id="s7">
+    <div class="card-head"><div class="sec-badge">G</div><div><h2>Your Own Words (Optional)</h2><p>Two open questions. You may leave these blank.</p></div></div>
+    <div class="open-q"><label for="g1">G1. In your view, how does the level of gender inclusion in leadership affect the overall performance and culture of your organization?</label><p>Optional — write as much or as little as you wish.</p><textarea id="g1" placeholder="Type your response here…"></textarea></div>
+    <div class="open-q"><label for="g2">G2. What is the single most important change that would improve gender equality in your organization's leadership pipeline?</label><p>Optional — your perspective is valuable to this research.</p><textarea id="g2" placeholder="Type your response here…"></textarea></div>
+    <div class="nav-row"><button class="btn btn-sec" onclick="goTo(6)">← Back</button><button class="btn btn-sub" onclick="submit6()">✓ Submit Survey</button></div>
+  </div>
+
+  <!-- THANK YOU -->
+  <div class="card" id="ty">
+    <div class="thankyou">
+
+      <div style="display:flex;justify-content:center;margin-bottom:28px;">
+        <div style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#4A1E7A,#0C6B5E);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 32px rgba(74,30,122,0.35);animation:popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);">
+          <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="20" stroke="rgba(255,255,255,0.25)" stroke-width="2"/><path d="M12 22l7 7 13-14" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </div>
+      <style>@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}</style>
+
+      <h2>Survey Successfully Submitted!</h2>
+
+      <div style="background:linear-gradient(135deg,var(--purp-lt),#F5F0FF);border:1px solid #C8B8EE;border-radius:14px;padding:24px 30px;margin:22px 0;text-align:left;">
+        <p style="font-size:15px;font-weight:600;color:var(--purp-dk);margin-bottom:10px;">✅ Your response has been received and recorded.</p>
+        <p style="font-size:14px;color:#3A2060;line-height:1.75;margin-bottom:10px;">
+          We extend our sincere gratitude for participating in this survey on <strong>gender disparities in public sector leadership</strong> in Rwanda and Nigeria. Some of these questions touch on sensitive lived experiences, and your willingness to respond with honesty and candour is greatly appreciated.
+        </p>
+        <p style="font-size:14px;color:#3A2060;line-height:1.75;margin-bottom:10px;">
+          Your voice matters. The evidence gathered through this study will inform academic publications, policy recommendations, and advocacy aimed at improving gender equity in African public institutions.
+        </p>
+        <p style="font-size:14px;color:#3A2060;line-height:1.75;">
+          Your responses are completely anonymous. No personally identifying information was collected, and results will only ever be published as group-level aggregate statistics — never attributed to any individual.
+        </p>
+      </div>
+
+      <div class="sum-box">
+        <h4>📋 Your Submission Summary</h4>
+        <div class="sum-grid" id="sumGrid"></div>
+      </div>
+
+      <div style="background:#F4FFF8;border:1px solid #A8DDBC;border-radius:10px;padding:16px 22px;margin:18px 0;display:flex;gap:14px;align-items:flex-start;text-align:left;">
+        <span style="font-size:22px;flex-shrink:0;">💡</span>
+        <div>
+          <p style="font-size:13px;font-weight:600;color:#1A5A30;margin-bottom:4px;">What happens next?</p>
+          <p style="font-size:13px;color:#1A5A30;line-height:1.65;">Your response joins data from civil servants across Rwanda and Nigeria. After data collection closes, responses will be analysed using PLS-SEM structural equation modelling and multi-group analysis. Findings will be submitted to <em>Gender in Management: An International Journal</em> (Emerald) and shared with gender equality offices and public service reform bodies in both countries.</p>
+        </div>
+      </div>
+
+      <div style="background:var(--purp-lt);border:1px solid #C0A8EE;border-radius:10px;padding:14px 20px;margin:14px 0;font-size:13px;color:var(--purp-dk);text-align:left;display:flex;gap:12px;align-items:flex-start;">
+        <span style="font-size:18px;flex-shrink:0;">🌍</span>
+        <p>By sharing your experience, you are contributing to a future where gender-inclusive leadership is the norm — not the exception — across African public service. Thank you for being part of that change.</p>
+      </div>
+
+      <p style="font-size:12px;color:#A0AEC0;margin-top:18px;">Paper 6 — Gender Disparities in Public Sector Leadership | Rwanda &amp; Nigeria Civil Service Study</p>
+      <p style="font-size:12px;color:#B0BEC5;margin-top:4px;">You may now safely close this window or tab.</p>
+    </div>
+  </div>
+
+  <!-- ── SUBMISSION SUCCESS POPUP ── -->
+  <div class="popup-overlay" id="successPopup">
+    <div class="popup-box">
+      <div class="popup-confetti">🎉 🎓 🎉</div>
+      <div class="popup-tick" style="background:linear-gradient(135deg,#4A1E7A,#4A1E7ACC);">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <path d="M8 20l8 8 16-16" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"
+            style="stroke-dasharray:36;stroke-dashoffset:36;animation:drawCheck 0.6s 0.4s ease forwards;"/>
+        </svg>
+      </div>
+      <style>@keyframes drawCheck{from{stroke-dashoffset:36}to{stroke-dashoffset:0}}</style>
+      <div class="popup-title" style="color:#4A1E7A;">Survey Completed!</div>
+      <p class="popup-msg">
+        🙏 <strong>Thank you for completing this survey.</strong><br><br>
+        Your response for <strong>Paper 6 — Gender Disparities in Leadership</strong> has been successfully submitted.<br><br>
+        Your contribution is invaluable to this research on Sub-Saharan African public service. 
+        Results will be shared with policy makers to drive meaningful change.
+      </p>
+      <button class="popup-btn" style="background:#4A1E7A;" onclick="closePopup()">
+        ✓ Close &amp; View Summary
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOTAL = 8;
+const GIL_QS = [
+  "My ministry actively promotes qualified women into senior leadership positions.",
+  "Gender-inclusive policies are meaningfully implemented in my organization.",
+  "Female leaders in my organization are respected and treated equally to male leaders.",
+  "My organization has formal mentoring or sponsorship programs specifically for women.",
+  "Leadership decisions routinely include the perspectives of women.",
+  "My organization has formal gender equality targets or representation quotas.",
+  "Female employees have equal access to professional development and training opportunities.",
+  "Gender diversity is genuinely valued as an organizational strength, not just compliance.",
+  "My organization actively celebrates and promotes gender-inclusive leadership role models.",
+  "Gender equality goals are formally embedded in my ministry's strategic plans.",
+];
+const GB_QS = [
+  "Women in my organization face invisible barriers to career advancement (glass ceiling).",
+  "Female civil servants are held to higher performance standards than their male counterparts.",
+  "Cultural or traditional norms limit women's progression into leadership roles in this country.",
+  "Women are expected to prioritize family responsibilities over career advancement.",
+  "Senior male leaders are uncomfortable being supervised or managed by women.",
+  "Professional networks that enable promotion are largely inaccessible to women.",
+  "Female employees face sexual harassment or intimidation in this organization.",
+  "Gender-based discrimination in my organization goes largely unpunished.",
+  "Women must consistently work harder than men to receive equal recognition.",
+  "I have personally experienced or witnessed gender-based exclusion at work.",
+  "Maternity-related career penalties discourage women from seeking leadership roles.",
+  "Leadership succession planning in my organization does not consider gender balance.",
+];
+const CLIMATE_QS = [
+  "My organization encourages new ideas and innovative approaches to service delivery.",
+  "There is strong cooperation and effective teamwork within my department.",
+  "Communication across all levels of my organization is open and transparent.",
+  "Employees are meaningfully involved in decisions that affect their work.",
+  "My organization has a strong culture of mutual respect for all employees.",
+  "People in my organization feel psychologically safe to speak up without fear of retaliation.",
+  "My organization genuinely values diversity in people, perspectives, and ideas.",
+];
+const MOTIV_QS = [
+  "I find my work meaningful and worthwhile.",
+  "I am motivated to go beyond the minimum expectations of my role.",
+  "I feel genuinely enthusiastic about coming to work each day.",
+  "I invest effort above and beyond what is strictly required of me.",
+  "I feel proud of the contribution I make to public service.",
+  "I am willing to take on additional responsibilities when needed.",
+];
+const PERF_QS = [
+  "Service delivery quality in my ministry has measurably improved over the past 12 months.",
+  "My ministry consistently meets its performance targets and key performance indicators.",
+  "Citizens are generally satisfied with the quality of services delivered by my organization.",
+  "My organization makes effective and accountable use of public financial resources.",
+  "My ministry has a clear and well-communicated strategic direction.",
+  "My organization effectively learns from mistakes and implements improvements.",
+];
+
+let qN = 1;
+function makeQs(cId, qs, prefix) {
+  const c = document.getElementById(cId);
+  qs.forEach((q, i) => {
+    const id = `${prefix}_${i+1}`;
+    const row = document.createElement('div');
+    row.className = 'q-row';
+    row.id = `row_${id}`;
+    row.innerHTML = `
+      <div class="q-num-txt"><span class="q-num">${qN++}</span><span class="q-txt">${q}</span></div>
+      <div class="radio-scale">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="${id}" value="${n}"><div class="rb">${n}</div></label>`).join('')}</div>`;
+    c.appendChild(row);
+  });
+}
+
+// Rep opts radio styling
+document.querySelectorAll('.rep-opts label').forEach(lbl => {
+  lbl.querySelector('input').addEventListener('change', () => {
+    document.querySelectorAll('.rep-opts label').forEach(l => l.classList.remove('sel'));
+    lbl.classList.add('sel');
+  });
+});
+
+function updateProg(sec) {
+  const bars = document.getElementById('progBars');
+  bars.innerHTML = '';
+  for (let i=1;i<=TOTAL;i++){const b=document.createElement('div');b.className='prog-bar'+(i<sec?' done':i===sec?' active':'');bars.appendChild(b);}
+  document.getElementById('stepLbl').textContent = `Section ${sec} of ${TOTAL}`;
+  document.getElementById('pctLbl').textContent = `${Math.round(((sec-1)/TOTAL)*100)}% complete`;
+}
+function goTo(n) {
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('visible'));
+  document.getElementById('s'+n).classList.add('visible');
+  updateProg(n);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function valSelects(ids, errId) {
+  let ok=true;
+  ids.forEach(id=>{const el=document.getElementById(id);if(!el.value){el.style.borderColor='#B03030';ok=false;}else el.style.borderColor='';});
+  document.getElementById(errId).classList.toggle('show',!ok);
+  return ok;
+}
+function valRadios(secId, errId) {
+  const rows=document.querySelectorAll(`#${secId} .q-row`);
+  let ok=true;
+  rows.forEach(r=>{const ch=r.querySelector('input:checked');r.classList.toggle('unanswered',!ch);if(!ch)ok=false;});
+  document.getElementById(errId).classList.toggle('show',!ok);
+  if(!ok){const f=document.querySelector(`#${secId} .q-row.unanswered`);if(f)f.scrollIntoView({behavior:'smooth',block:'center'});}
+  return ok;
+}
+function nextSec(cur,secId,selectIds,next){
+  const ok=selectIds?valSelects(selectIds,'v'+cur):valRadios(secId,'v'+cur);
+  if(ok)goTo(next);
+}
+
+
+// ── QUOTA MANAGEMENT SYSTEM ──────────────────────────────────────────────────
+// Adjust QUOTAS to change the maximum responses per country
+const QUOTAS = {"Rwanda": 75, "Nigeria": 75};
+const QUOTA_KEYS = {"Rwanda": "rwanda", "Nigeria": "nigeria"};
+const QUOTA_NS = 'civilservice-p6-2026-v1';
+
+async function getCount(country) {
+  try {
+    const key = QUOTA_KEYS[country];
+    if (!key) return 0;
+    const r = await fetch(`https://api.countapi.xyz/get/${QUOTA_NS}/${key}`);
+    const d = await r.json();
+    return d.value || 0;
+  } catch(e) { return 0; }
+}
+
+async function incrementCount(country) {
+  try {
+    const key = QUOTA_KEYS[country];
+    if (!key) return;
+    await fetch(`https://api.countapi.xyz/hit/${QUOTA_NS}/${key}`);
+  } catch(e) {}
+}
+
+async function checkQuotas() {
+  const sel = document.getElementById('d1');
+  if (!sel) return;
+  const allFull = [];
+
+  for (const country of Object.keys(QUOTAS)) {
+    const count = await getCount(country);
+    const quota = QUOTAS[country];
+    const opt = Array.from(sel.options).find(o => o.value === country);
+    if (count >= quota) {
+      if (opt) {
+        opt.remove(); // Hide country completely once quota is reached
+      }
+      allFull.push(country);
+    }
+  }
+
+  // If ALL countries are full — show survey closed banner
+  if (allFull.length === Object.keys(QUOTAS).length) {
+    document.querySelectorAll('.card, .section-card').forEach(c => c.style.display = 'none');
+    const closed = document.getElementById('survey-closed');
+    if (closed) closed.style.display = 'flex';
+  }
+}
+
+// Run quota check on page load
+window.addEventListener('DOMContentLoaded', () => { checkQuotas(); });
+async function submit6() {
+  // Disable button to prevent double-submit
+  const btn = document.querySelector('.btn-sub');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  // ── PRE-SUBMIT QUOTA CHECK ───────────────────────────────────────────
+  const selectedCountry = document.getElementById('d1')?.value;
+  if (selectedCountry) {
+    const currentCount = await getCount(selectedCountry);
+    if (currentCount >= QUOTAS[selectedCountry]) {
+      btn.disabled = false;
+      btn.textContent = '✓ Submit Survey';
+      alert(`We are sorry — the quota for ${selectedCountry} respondents has now been reached. Thank you for your interest in this study.`);
+      await checkQuotas();
+      return;
+    }
+  }
+
+  // ── Collect all responses ──────────────────────────────────────────────
+  const payload = {};
+
+  // Demographics
+  ['d1','d2','d3','d4','d5','d6','d7','d8'].forEach(id => {
+    payload[id.toUpperCase()] = document.getElementById(id).value || '';
+  });
+  const rep = document.querySelector('input[name="GIL_REP"]:checked');
+  payload['GIL_REP'] = rep ? rep.value : '';
+
+  // All radio scales
+  const allRadios = document.querySelectorAll('input[type=radio]:checked');
+  allRadios.forEach(r => { payload[r.name] = r.value; });
+
+  // Open questions
+  payload['G1_Open'] = document.getElementById('g1').value || '';
+  payload['G2_Open'] = document.getElementById('g2').value || '';
+
+  // Computed averages (researcher convenience)
+  const avg = (prefix, count) => {
+    const vals = Array.from({length:count},(_,i)=>+(payload[`${prefix}_${i+1}`]||0)).filter(v=>v>0);
+    return vals.length ? (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2) : 'N/A';
+  };
+  payload['_avg_GIL']   = avg('GIL', 10);
+  payload['_avg_GB']    = avg('GB', 12);
+  payload['_avg_OC_CL'] = avg('OC_CL', 7);
+  payload['_avg_WM']    = avg('WM', 6);
+  payload['_avg_IP']    = avg('IP', 6);
+  payload['_total_answered'] = allRadios.length;
+  payload['_survey'] = 'Paper6_Gender_Leadership';
+  payload['_submitted_at'] = new Date().toISOString();
+
+  // ── POST to Formspree ──────────────────────────────────────────────────
+  try {
+    const res = await fetch('https://formspree.io/f/mreyggvb', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('Network response was not ok');
+
+    if (selectedCountry) await incrementCount(selectedCountry);
+    // ── Show thank-you screen ──────────────────────────────────────────
+    const gil  = Array.from({length:10},(_,i)=>+(payload[`GIL_${i+1}`]||0)).filter(v=>v>0);
+    const mot  = Array.from({length:6}, (_,i)=>+(payload[`WM_${i+1}`] ||0)).filter(v=>v>0);
+    const perf = Array.from({length:6}, (_,i)=>+(payload[`IP_${i+1}`] ||0)).filter(v=>v>0);
+    const avgArr = arr => arr.length?(arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2):'N/A';
+
+    const sumData=[
+      ["Country", payload['D1']||"—"],
+      ["Gender identity", payload['D2']||"—"],
+      ["Grade Level", payload['D5']||"—"],
+      ["Questions answered", allRadios.length],
+      ["Gender inclusion avg.", avgArr(gil)+' / 5'],
+      ["Work motivation avg.", avgArr(mot)+' / 5'],
+      ["Institutional performance avg.", avgArr(perf)+' / 5'],
+    ];
+    document.getElementById('sumGrid').innerHTML=sumData.map(([k,v])=>`<div class="sum-item"><span>${k}</span><span>${v}</span></div>`).join('');
+      showPopup();
+    document.querySelectorAll('.card').forEach(c=>c.style.display='none');
+    const ty=document.getElementById('ty');
+    if (ty) { ty.style.display='block'; ty.classList.add('visible'); }
+    document.getElementById('pctLbl').textContent='100% complete';
+    document.querySelectorAll('.prog-bar').forEach(b=>{b.className='prog-bar done';});
+    window.scrollTo({top:0,behavior:'smooth'});
+
+  } catch(err) {
+    // Show error without losing responses
+    btn.disabled = false;
+    btn.textContent = '✓ Submit Survey';
+    const errBox = document.createElement('div');
+    errBox.style.cssText = 'background:#FFF0EE;border:1px solid #F0BABA;border-radius:8px;color:#B03030;padding:12px 18px;margin:0 0 14px;font-size:13px;font-weight:500;';
+    errBox.textContent = '⚠ Submission failed — please check your internet connection and try again. Your answers have not been lost.';
+    btn.parentElement.insertBefore(errBox, btn);
+  }
+}
+
+function init(){
+  const bars=document.getElementById('progBars');
+  for(let i=0;i<TOTAL;i++){const b=document.createElement('div');b.className='prog-bar'+(i===0?' active':'');bars.appendChild(b);}
+  makeQs('s2-qs',GIL_QS,'GIL');
+  makeQs('s3-qs',GB_QS,'GB');
+  makeQs('s4-qs',CLIMATE_QS,'OC_CL');
+  makeQs('s5-qs',MOTIV_QS,'WM');
+  makeQs('s6-qs',PERF_QS,'IP');
+}
+init();
+
+
+
+
+// ── POPUP CONTROLS ────────────────────────────────────────────────────────────
+function showPopup() {
+  const overlay = document.getElementById('successPopup');
+  if (!overlay) return;
+  overlay.classList.add('show');
+  setTimeout(() => closePopup(), 8000);
+}
+function closePopup() {
+  const overlay = document.getElementById('successPopup');
+  if (!overlay) return;
+  overlay.style.animation = 'fadeOut 0.25s ease forwards';
+  setTimeout(() => {
+    overlay.classList.remove('show');
+    overlay.style.animation = '';
+  }, 250);
+}
+const _st = document.createElement('style');
+_st.textContent = '@keyframes fadeOut{from{opacity:1}to{opacity:0}}';
+document.head.appendChild(_st);
+
+</script>
+</body>
+</html>
